@@ -19,6 +19,18 @@ Use **merge** (not rebase) to preserve history of when syncs and fixes were appl
 
 ```bash
 git fetch origin main
+
+# See what's new on main since last sync:
+git log --oneline HEAD..origin/main
+
+# See a summary of changes:
+git log --oneline HEAD..origin/main | wc -l  # commit count
+git diff --stat HEAD..origin/main            # files changed
+
+# Check if any specific fix PRs landed:
+git log --oneline origin/main --grep="heartbeat"  # search by keyword
+
+# When ready, merge:
 git merge origin/main
 ```
 
