@@ -10,6 +10,7 @@ This branch is what my personal deployment of OpenClaw runs on.
 ## Current Fixes
 
 - `fix/wake-mode-bypass-empty-heartbeat` - Bypass empty-file check for cron wakeMode "now"
+- `fix/session-status-unix-timestamp` - Add ISO-8601 and Unix timestamps to session_status for accurate reminder scheduling (#10836, fixes #10841)
 
 ## Workflow
 
