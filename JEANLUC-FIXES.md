@@ -13,6 +13,32 @@ This branch is what my personal deployment of OpenClaw runs on.
 
 ## Workflow
 
-1. Merge or cherry-pick PRs I care about into this branch
-1. Deploy from `jeanluc-fixes`
-1. Rebase onto `main` as upstream PRs get merged
+Use **merge** (not rebase) to preserve history of when syncs and fixes were applied.
+
+### Sync with main
+
+```bash
+git fetch origin main
+git merge origin/main
+```
+
+If there are conflicts, resolve them and commit. No force push needed.
+
+### Add a fix from an open PR
+
+```bash
+# If a local fix branch exists:
+git merge fix/branch-name
+
+# Or cherry-pick a specific commit:
+git cherry-pick <commit-sha>
+```
+
+### When a fix lands on main
+
+Once a fix PR is merged upstream, the next sync with main will include it.
+You can then remove it from the "Current Fixes" list above.
+
+### Deploy
+
+Deploy from `jeanluc-fixes` after syncing or adding fixes.
