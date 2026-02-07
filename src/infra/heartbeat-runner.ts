@@ -512,13 +512,17 @@ export async function runHeartbeatOnce(opts: {
 
   // Skip heartbeat if HEARTBEAT.md exists but has no actionable content.
   // This saves API calls/costs when the file is effectively empty (only comments/headers).
-  // EXCEPTION: Don't skip for exec events - they have pending system events to process.
+  // EXCEPTION: Don't skip for exec events or cron wakeMode: "now" jobs. These have
+  // pending system events in a separate queue that get processed during the agent turn,
+  // so an empty HEARTBEAT.md doesn't mean there's nothing to do.
+  // See: https://github.com/moltbot/moltbot/issues/4224
   const isExecEventReason = opts.reason === "exec-event";
+  const isCronWakeNow = opts.reason?.startsWith("cron:");
   const workspaceDir = resolveAgentWorkspaceDir(cfg, agentId);
   const heartbeatFilePath = path.join(workspaceDir, DEFAULT_HEARTBEAT_FILENAME);
   try {
     const heartbeatFileContent = await fs.readFile(heartbeatFilePath, "utf-8");
-    if (isHeartbeatContentEffectivelyEmpty(heartbeatFileContent) && !isExecEventReason) {
+    if (isHeartbeatContentEffectivelyEmpty(heartbeatFileContent) && !isExecEventReason && !isCronWakeNow) {
       emitHeartbeatEvent({
         status: "skipped",
         reason: "empty-heartbeat-file",
