@@ -1,6 +1,6 @@
 # jeanluc-fixes Branch
 
-This branch is what my personal deployment of Moltbot runs on.
+This branch is what my personal deployment of OpenClaw runs on.
 
 ## Purpose
 
@@ -14,5 +14,5 @@ This branch is what my personal deployment of Moltbot runs on.
 ## Workflow
 
 1. Merge or cherry-pick PRs I care about into this branch
-2. Deploy from `jeanluc-fixes`
-3. Rebase onto `main` as upstream PRs get merged
+1. Deploy from `jeanluc-fixes`
+1. Rebase onto `main` as upstream PRs get merged
