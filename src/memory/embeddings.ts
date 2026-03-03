@@ -1,6 +1,7 @@
 import fsSync from "node:fs";
 import type { Llama, LlamaEmbeddingContext, LlamaModel } from "node-llama-cpp";
 import type { OpenClawConfig } from "../config/config.js";
+import { isNixMode } from "../config/paths.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { resolveUserPath } from "../utils.js";
 import { createGeminiEmbeddingProvider, type GeminiEmbeddingClient } from "./embeddings-gemini.js";
@@ -108,7 +109,12 @@ async function createLocalEmbeddingProvider(
 
   const ensureContext = async () => {
     if (!llama) {
-      llama = await getLlama({ logLevel: LlamaLogLevel.error });
+      llama = await getLlama({
+        logLevel: LlamaLogLevel.error,
+        // In Nix, the package directory is read-only so runtime compilation
+        // is impossible. Pre-built binaries are already bundled by the Nix build.
+        ...(isNixMode ? { build: "never" } : {}),
+      });
     }
     if (!embeddingModel) {
       const resolved = await resolveModelFile(modelPath, modelCacheDir || undefined);
